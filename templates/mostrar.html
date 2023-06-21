@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mostrar Valores</title>
+</head>
+<body>
+    <h1>Mostrar Valores</h1>
+    <p>Tu nombre es: {{ nombre }}</p>
+    <div>
+        <a href="{{url_for('inicio')}}">Regresar al inicio</a>
+        <a href="{{url_for('edad', edad=10)}}">Edad</a>
+    </div>
+</body>
+</html>

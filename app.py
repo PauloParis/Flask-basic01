@@ -1,5 +1,5 @@
 
-from flask import Flask, request, render_template, url_for
+from flask import Flask, request, render_template, url_for, jsonify
 from werkzeug.utils import redirect
 from werkzeug.exceptions import abort
 
@@ -63,3 +63,19 @@ def salir():
 @app.errorhandler(404)
 def pagina_no_encontrada(error):
     return (render_template('error404.html', error=error), 404)
+
+
+
+# USO DE JSON
+
+# rest representational state transfer
+# consumo desde el front (vue, react, angular, etc)
+@app.route('/api/mostrar/<nombre>', methods=['GET', 'POST'])
+def mostrar_json(nombre):
+    valores = {
+        'nombre': nombre,
+        'metodo_http': request.method
+    }
+    return valores
+    #return jsonify(valores) # por ahora no es necesario
+

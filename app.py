@@ -1,38 +1,45 @@
 
-from flask import Flask, request, render_template, url_for, jsonify
+from flask import Flask, request, render_template, url_for, jsonify, session
 from werkzeug.utils import redirect
 from werkzeug.exceptions import abort
 
 app = Flask(__name__)
 
+app.secret_key = 'jBsadfS_U2/34Iv675nb.-HSDh54-jGSObO34gh56'
 
-""" 
---logger--
 
 @app.route('/')
 def inicio():
-    app.logger.debug('Nivel debug')
-    app.logger.info('Nivel info')
-    app.logger.warn('Nivel warning') # en producción muestra desde aqui
-    app.logger.error('Nivel error')
-    return 'Hola mundo desde Flask' """
-
-@app.route('/')
-def inicio():
-    app.logger.info(f'Entramos al path {request.path}')
-    return 'Hola mundo desde Flask'
+    if 'username' in session:
+        return f"El usuario ya ha hecho login {session['username']}"
+    return 'No ha hecho login'
 
 
-""" 
---Tipos que puede recibir como parametros--
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        # sin validaciones
+        usuario = request.form['username']
+        session['username'] = usuario
+        
+        # las 2 lineas de arriba se pueden resumir en la linea de abajo
+        # session['username'] = request.form['username']
 
-string  ->  (default) accepts any text without a slash
-int     ->  accepts positive integers
-float   ->  accepts positive floating point values
-path    ->  like string but also accepts slashes
-uuid    ->  accepts UUID strings
+        return redirect(url_for('inicio'))
 
- """
+    return render_template('login.html')
+
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username')
+    return redirect(url_for('inicio'))
+
+
+
+
+
 @app.route('/saludar/<nombre>')
 def saludar(nombre):
     return f'Saludos {nombre.upper()}'
@@ -79,3 +86,8 @@ def mostrar_json(nombre):
     return valores
     #return jsonify(valores) # por ahora no es necesario
 
+
+
+# MANEJO DE SESIÓN 
+
+#app.secret_key = 'jBsadfS_U2/34Iv675nb.-HSDh54-jGSObO34gh56'
